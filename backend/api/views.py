@@ -37,7 +37,7 @@ class LoginView(APIView):
         if user is None:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({"message": "Login successful", "user": UserSerializer(user).data})
+        return Response({"message": "Login successful","success":True, "user": UserSerializer(user).data})
 
 class JobPostView(generics.CreateAPIView):
     serializer_class = JobSerializer

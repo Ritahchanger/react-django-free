@@ -2,21 +2,50 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../../configurations/apiConfig";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // Redirect after login
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Logging in:", formData);
+
+    if (!formData.username || !formData.password) {
+      toast.error("Fill in all fields.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, formData, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+
+      console.log(response);
+
+      if (response.data.success) {
+        toast.success("Login successful!");
+        sessionStorage.setItem("token", response.data.token);
+        navigate("/jobs");
+      } else {
+        toast.error(response.data.message || "Login failed.");
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "An error occurred.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,9 +86,10 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-sm text-sm font-semibold hover:bg-blue-700 transition duration-300"
+            className="w-full bg-blue-600 text-white py-2 rounded-sm text-sm font-semibold hover:bg-blue-700 transition duration-300 disabled:opacity-50"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="text-center text-gray-500 mt-4">
