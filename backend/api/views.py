@@ -90,3 +90,16 @@ class AcceptJobView(APIView):
         except Job.DoesNotExist:
             return Response({"error": "Job not found or already assigned"}, status=status.HTTP_404_NOT_FOUND)
 
+
+
+class WorkerJobsView(generics.ListAPIView):
+    serializer_class = JobSerializer
+
+    def get_queryset(self):
+        worker_id = self.kwargs.get("worker_id")
+        return Job.objects.filter(assigned_to_id=worker_id)  # Returns queryset, not Response
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
