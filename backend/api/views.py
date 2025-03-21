@@ -71,17 +71,22 @@ class AvailableJobsView(generics.ListAPIView):
         return Response(serializer.data)
 
 
-class AcceptJobView(APIView):
-    permission_classes = [IsAuthenticated]
 
+
+class AcceptJobView(APIView):
     def post(self, request, job_id):
         try:
             job = Job.objects.get(id=job_id, assigned_to=None)
-            if request.user.is_worker:
-                job.assigned_to = request.user  # Fixed typo here
-                job.save()
-                return Response({"message": "Job accepted successfully"}, status=status.HTTP_200_OK)
+            worker_id = request.data.get("worker_id")
 
-            return Response({"error": "Only workers can accept jobs"}, status=status.HTTP_403_FORBIDDEN)
+            if not worker_id:
+                return Response({"error": "Worker ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            job.assigned_to_id = worker_id
+            job.save()
+            
+            return Response({"message": "Job accepted successfully"}, status=status.HTTP_200_OK)
+        
         except Job.DoesNotExist:
             return Response({"error": "Job not found or already assigned"}, status=status.HTTP_404_NOT_FOUND)
+
