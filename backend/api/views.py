@@ -80,7 +80,7 @@ class AcceptJobView(APIView):
             worker_id = request.data.get("worker_id")
 
             if not worker_id:
-                return Response({"error": "Worker ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"success":False,"error": "Worker ID is required","status":404}, status=status.HTTP_200_OK)
 
             job.assigned_to_id = worker_id
             job.save()

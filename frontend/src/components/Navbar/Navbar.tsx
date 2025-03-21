@@ -29,20 +29,20 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex gap-6">
-              <a
-                href="/"
+              <Link
+                to="/jobs"
                 className="flex items-center gap-2 hover:text-gray-200"
               >
                 <Home size={18} />
                 Home
-              </a>
-              <a
-                href="/jobs"
+              </Link>
+              <Link
+                to="/user/jobs"
                 className="flex items-center gap-2 hover:text-gray-200"
               >
                 <Briefcase size={18} />
-                Jobs
-              </a>
+                My Jobs
+              </Link>
               <a
                 href="/profile"
                 className="flex items-center gap-2 hover:text-gray-200"
@@ -81,14 +81,14 @@ const Navbar = () => {
           {/* Mobile Menu */}
           {menuOpen && (
             <div className="md:hidden flex flex-col items-center gap-4 py-4 border-t border-gray-300">
-              <a href="/" className="flex items-center gap-2">
+              <Link to="/jobs" className="flex items-center gap-2">
                 <Home size={18} />
                 Home
-              </a>
-              <a href="/jobs" className="flex items-center gap-2">
+              </Link>
+              <Link to="/user/jobs" className="flex items-center gap-2">
                 <Briefcase size={18} />
-                Jobs
-              </a>
+                My Jobs
+              </Link>
               <a href="/profile" className="flex items-center gap-2">
                 <User size={18} />
                 Profile

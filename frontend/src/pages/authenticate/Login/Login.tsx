@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
@@ -31,13 +29,12 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-
-      console.log(response);
-
       if (response.data.success) {
         toast.success("Login successful!");
-        sessionStorage.setItem("token", response.data.token);
-        navigate("/jobs");
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("isAuthenticated", "true"); // Store as a string
+
+        navigate("/jobs"); // Redirect after login
       } else {
         toast.error(response.data.message || "Login failed.");
       }
@@ -86,7 +83,7 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-sm text-sm font-semibold hover:bg-blue-700 transition duration-300 disabled:opacity-50"
+            className="w-full bg-blue-600 text-white py-2 rounded-sm text-sm font-semibold hover:bg-blue-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}

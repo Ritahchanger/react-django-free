@@ -35,7 +35,18 @@ const UsersJobs: React.FC = () => {
     const getUserJobs = async () => {
       setLoading(true);
       try {
-        const response = await axios.get<ApiResponse>(`${API_BASE_URL}/jobs`);
+        
+        const storedUser = localStorage.getItem("user");
+        if (!storedUser) {
+          toast.error("User not found. Please log in.");
+          return;
+        }
+
+        const userId : number = JSON.parse(storedUser).id;
+
+        const response = await axios.get<ApiResponse>(
+          `${API_BASE_URL}/jobs/worker/${userId}`
+        );
         if (response.data.success) {
           setUserJobs(response.data.data);
         } else {
