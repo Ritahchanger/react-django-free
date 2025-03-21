@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 
 import { Link } from "react-router-dom";
 
+import API_BASE_URL from "../../../configurations/apiConfig";
+
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
 
