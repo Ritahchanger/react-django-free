@@ -1,46 +1,55 @@
+import { useState, useEffect } from "react";
 import Navbar from "../../../components/Navbar/Navbar";
 import { format } from "date-fns";
+import API_BASE_URL from "../../../configurations/apiConfig";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { usePreloader } from "../../../context/PreloaderContext";
 
-const UsersJobs = () => {
-  // Static Data (Simulating API Response)
-  const userJobs = [
-    {
-      id: 1,
-      employer: {
-        id: 3,
-        username: "ritahchanger",
-        email: "ritahchanger@gmail.com",
-      },
-      title: "Software Developer",
-      description: "Looking for a Python developer with Django experience.",
-      created_at: "2025-03-21T19:00:34.176629Z",
-      assigned_to: 2,
-    },
-    {
-      id: 2,
-      employer: {
-        id: 4,
-        username: "john_doe",
-        email: "johndoe@example.com",
-      },
-      title: "Frontend Developer",
-      description: "React developer needed for a startup project.",
-      created_at: "2025-03-22T14:15:10.100000Z",
-      assigned_to: 2,
-    },
-    {
-      id: 3,
-      employer: {
-        id: 5,
-        username: "jane_smith",
-        email: "janesmith@example.com",
-      },
-      title: "Backend Engineer",
-      description: "Node.js and Express expert required.",
-      created_at: "2025-03-23T08:30:45.500000Z",
-      assigned_to: 2,
-    },
-  ];
+// Define Types for Job and Employer
+interface Employer {
+  id: number;
+  username: string;
+  email: string;
+}
+
+interface Job {
+  id: number;
+  employer: Employer;
+  title: string;
+  description: string;
+  created_at: string;
+  assigned_to: number | null;
+}
+
+interface ApiResponse {
+  success: boolean;
+  data: Job[];
+}
+
+const UsersJobs: React.FC = () => {
+  const [userJobs, setUserJobs] = useState<Job[]>([]);
+  const { loading, setLoading } = usePreloader(); // Using Preloader Context
+
+  useEffect(() => {
+    const getUserJobs = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get<ApiResponse>(`${API_BASE_URL}/jobs`);
+        if (response.data.success) {
+          setUserJobs(response.data.data);
+        } else {
+          toast.error("Failed to fetch jobs.");
+        }
+      } catch (error) {
+        toast.error("An error occurred while fetching jobs.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getUserJobs();
+  }, [setLoading]);
 
   return (
     <div>
@@ -50,7 +59,9 @@ const UsersJobs = () => {
           Your Assigned Jobs
         </h2>
 
-        {userJobs.length === 0 ? (
+        {loading ? (
+          <p className="text-center text-gray-500">Loading jobs...</p>
+        ) : userJobs.length === 0 ? (
           <p className="text-center text-gray-500">No jobs assigned yet.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -66,7 +77,7 @@ const UsersJobs = () => {
                   <span className="font-medium">{job.employer.username}</span>
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
-                  Assigned on: {format(new Date(job.created_at), "PPP p")}
+                  Posted on: {format(new Date(job.created_at), "PPP p")}
                 </p>
                 <button className="mt-3 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
                   View Details

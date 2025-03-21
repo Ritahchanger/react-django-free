@@ -35,7 +35,7 @@ class LoginView(APIView):
 
         user = authenticate(username=username, password=password)
         if user is None:
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Invalid credentials","status":400}, status=status.HTTP_200_OK)
 
         return Response({"message": "Login successful","success":True, "user": UserSerializer(user).data})
 
@@ -68,7 +68,7 @@ class AvailableJobsView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         available_jobs = Job.objects.filter(assigned_to=None)
         serializer = self.get_serializer(available_jobs, many=True)
-        return Response(serializer.data)
+        return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
 
 
 
