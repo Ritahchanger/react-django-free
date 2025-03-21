@@ -1,6 +1,9 @@
 "use client"; // For Next.js (if applicable)
 
 import { useState } from "react";
+
+import { Link } from "react-router-dom";
+
 import { motion } from "framer-motion";
 
 const Signup = () => {
@@ -31,7 +34,7 @@ const Signup = () => {
       setError("Passwords do not match");
       return;
     }
-    
+
     setError(""); // Clear error
     console.log("Signup Data:", formData);
   };
@@ -42,7 +45,7 @@ const Signup = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md"
+        className="bg-white shadow-xl rounded-sm p-8 w-full max-w-[500px]"
       >
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
           Create an Account 🚀
@@ -77,32 +80,36 @@ const Signup = () => {
             />
           </div>
 
-          <div>
-            <label className="block text-gray-600 font-medium">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="w-full mt-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <div className="flex gap-[1rem]">
+            <div>
+              <label className="block text-gray-600 font-medium">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                className="w-full mt-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-gray-600 font-medium">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              name="confirmPassword"
-              className="w-full mt-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-              placeholder="Confirm your password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
+            <div>
+              <label className="block text-gray-600 font-medium">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                className="w-full mt-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                placeholder="Confirm your password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
 
           <div className="flex gap-4">
@@ -131,7 +138,7 @@ const Signup = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300"
+            className="w-full bg-blue-600 text-white py-3 rounded-sm text-sm font-semibold hover:bg-blue-700 transition duration-300"
           >
             Sign Up
           </button>
@@ -139,9 +146,9 @@ const Signup = () => {
 
         <p className="text-center text-gray-500 mt-4">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <Link to="/" className="text-blue-600 hover:underline">
             Log in
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>

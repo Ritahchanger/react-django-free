@@ -1,10 +1,11 @@
-"use client"; 
+"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-const Login = () => {
+import { Link } from "react-router-dom";
 
+const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,16 +55,16 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300"
+            className="w-full bg-blue-600 text-white py-2 rounded-sm text-sm font-semibold hover:bg-blue-700 transition duration-300"
           >
             Login
           </button>
         </form>
         <p className="text-center text-gray-500 mt-4">
           Don't have an account?{" "}
-          <a href="/register" className="text-blue-600 hover:underline">
+          <Link to="/signup" className="text-blue-600 hover:underline">
             Sign up
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>
