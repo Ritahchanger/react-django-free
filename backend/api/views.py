@@ -19,14 +19,14 @@ class SignupView(APIView):
         is_worker = request.data.get('is_worker', False)
 
         if User.objects.filter(username=username).exists():
-            return Response({"error": "Username already taken"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Username already taken",status:404, "success":False}, status=status.HTTP_200_OK)
 
         user = User.objects.create_user(
             username=username, email=email, password=password, 
             is_employer=is_employer, is_worker=is_worker
         )
 
-        return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
+        return Response({"message": "User registered successfully","success":True}, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
     def post(self, request):
@@ -85,7 +85,7 @@ class AcceptJobView(APIView):
             job.assigned_to_id = worker_id
             job.save()
             
-            return Response({"message": "Job accepted successfully"}, status=status.HTTP_200_OK)
+            return Response({"message": "Job accepted successfully","success":True}, status=status.HTTP_200_OK)
         
         except Job.DoesNotExist:
             return Response({"error": "Job not found or already assigned"}, status=status.HTTP_404_NOT_FOUND)
