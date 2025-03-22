@@ -1,19 +1,23 @@
-"use client"; // For Next.js (if applicable)
+"use client";
 
 import { useState } from "react";
-
 import { Link } from "react-router-dom";
-
 import { motion } from "framer-motion";
+import API_BASE_URL from "../../../configurations/apiConfig";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
     is_employer: false,
-    is_worker: false,
+    is_worker: true,
   });
 
   const [error, setError] = useState("");
@@ -26,17 +30,41 @@ const Signup = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Password match validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
     setError(""); // Clear error
     console.log("Signup Data:", formData);
+
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/auth/signup`,
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Signup successful!");
+        navigate("/");
+        // Optionally, redirect to login page or another route
+      } else {
+        toast.error(response.data.message || "Signup failed.");
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(
+        error.response?.data?.message || "An error occurred during signup."
+      );
+    }
   };
 
   return (
@@ -80,8 +108,8 @@ const Signup = () => {
             />
           </div>
 
-          <div className="flex gap-[1rem]">
-            <div>
+          <div className="flex gap-4">
+            <div className="flex-1">
               <label className="block text-gray-600 font-medium">
                 Password
               </label>
@@ -96,7 +124,7 @@ const Signup = () => {
               />
             </div>
 
-            <div>
+            <div className="flex-1">
               <label className="block text-gray-600 font-medium">
                 Confirm Password
               </label>
